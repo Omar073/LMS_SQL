@@ -1,5 +1,5 @@
 #pragma once
-
+#include "librarian.h"
 namespace Project1 {
 
 	using namespace System;
@@ -87,20 +87,39 @@ namespace Project1 {
 			this->PerformLayout();
 
 		}
+
+	public: librarian^ libw;
+
 #pragma endregion
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-		String^ email = this->textBox1->Text;
+		String^ NAME = this->textBox1->Text;
 
 		try {
-			String^ connString = "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+			String^ connString = "Data Source=DESKTOP-IEDJR1O\\THIRD;Initial Catalog=lms3;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 			SqlConnection sqlconn(connString);
 			sqlconn.Open();
 
-			String ^sqlquery = "SELECT * FROM LIBRARIAN WHERE"
+			String^ sqlquery = "SELECT * FROM Librarian WHERE NAME=@NAME ; ";
+			SqlCommand command(sqlquery, %sqlconn);
+			command.Parameters->AddWithValue("@NAME", NAME);
+
+			SqlDataReader^ reader = command.ExecuteReader();
+
+			if (reader->Read()) {
+				libw = gcnew librarian;
+				libw->Staff_ID = reader->GetInt32(0);
+				libw->NAME = reader->GetString(1);
+				libw->password = reader->GetString(2);
+				libw->Email_address = reader->GetString(3);
+				MessageBox::Show("succ");
+				this->Close();
+			}
+			else {
+				MessageBox::Show("failed");
+			}
 		}
 		catch (Exception^ e) {
-			MessageBox::Show("error");
-
+			MessageBox::Show("error " + e);
 		}
 	}
 		  
