@@ -1,9 +1,9 @@
 import tkinter as tk
-from login_page import LoginPage, show_signup_page
+from login_page import LoginPage, SignupPage
 
 def main():
     root = tk.Tk()
-    login_page = LoginPage(root, show_signup_page)
+    login_page = LoginPage(root )
     root.mainloop()
 
 if __name__ == "__main__":
