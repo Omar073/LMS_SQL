@@ -1,6 +1,6 @@
 import tkinter as tk
+from tkinter import messagebox
 from customtkinter import CTkLabel, CTkEntry, CTkButton
-from sign_up_page import SignupPage
 from db_connection import get_shared_connection  # Import the database connection function
 
 class LoginPage(tk.Frame):
@@ -41,22 +41,50 @@ class LoginPage(tk.Frame):
 
         try:
             cursor = self.db_connection.cursor()
-            query = "SELECT * FROM Librarian WHERE Staff_ID = ? AND password = ?"
-            cursor.execute(query, (username, password))
-            row = cursor.fetchone()
 
-            if row:
-                print("Login successful")
-                # Implement the logic to navigate to the next page or perform other actions upon successful login
+            # Execute the SQL function for sign-in
+            cursor.execute("SELECT * FROM LibrarianSignInFunction(?, ?)", (username, password))
+            rows = cursor.fetchall()
+
+            if rows:
+                role = rows[0][0]  # Role is the first column of the result set
+                if role == 'Librarian':
+                    print("Login successful as Librarian")
+                    root = self.winfo_toplevel()
+                    root.destroy()
+
+                    from librarian_homepage import LibrarianHomePage as LibHome
+
+                    librarian_homepage = LibHome(root)
+                    root.mainloop()
+
+                    root.mainloop()
+                elif role == 'Member':
+                    print("Login successful as Member")
+                    root = self.winfo_toplevel()
+                    root.destroy()
+
+                    root = tk.Tk()
+                    from user_homepage import UserHomePage as UserHome
+
+                    useHome = UserHome(root)
+                    root.mainloop()
+
+                else:
+                    print("Login failed. Invalid username or password")
+                    messagebox.showerror("Login Failed", "Invalid username or password")
+
             else:
                 print("Login failed. Invalid username or password")
+                messagebox.showerror("Login Failed", "Invalid username or password")
+
                 # You can display a message to the user indicating login failure
 
         except Exception as e:
             print("Error:", e)
         finally:
             cursor.close()
-            self.db_connection.close()
+
 
     def show_signup_page(self):
         # Get the Tkinter root window
@@ -66,6 +94,8 @@ class LoginPage(tk.Frame):
 
         # Create a new Tkinter window for the SignupPage
         root = tk.Tk()
+        from sign_up_page import SignupPage
+
         signup_page = SignupPage(root, self.show_login_page)
         root.mainloop()
 

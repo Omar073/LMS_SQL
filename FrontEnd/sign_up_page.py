@@ -58,13 +58,25 @@ class SignupPage(tk.Frame):
 
         try:
             cursor = self.db_connection.cursor()
-            query = "INSERT INTO Librarian (Staff_ID, NAME, password, Email_address) VALUES (?, ?, ?, ?)"
-            cursor.execute(query, (staff_id, name, password, email))
-            self.db_connection.commit()
 
-            print("Signup successful")
-            # Implement the logic to navigate to the login page or perform other actions upon successful signup
+            # Execute the SQL function for sign-in
+            cursor.execute("SELECT * FROM LibrarianSignInFunction(?, ?)", ("l", password))
+            rows = cursor.fetchall()
 
+            if rows:
+                role = rows[0][0]  # Role is the first column of the result set
+                if role == 'Librarian':
+                    print("Login successful as Librarian")
+                    # Implement navigation logic for librarian homepage
+                elif role == 'Member':
+                    print("Login successful as Member")
+                    # Implement navigation logic for member homepage
+                else:
+                    print("Login failed. Invalid username or password")
+                    # You can display a message to the user indicating login failure
+            else:
+                print("Login failed. Invalid username or password")
+                # You can display a message to the user indicating login failur
         except Exception as e:
             print("Error:", e)
         finally:
