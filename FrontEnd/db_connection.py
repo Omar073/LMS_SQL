@@ -2,7 +2,7 @@ from dbutils.pooled_db import PooledDB
 import pyodbc
 
 # Database connection parameters
-server = 'DESKTOP-IEDJR1O\\THIRD'
+server = 'DESKTOP-M1K1OIB'
 database = 'lms5'
 driver = 'SQL SERVER'
 trusted_connection = 'yes'

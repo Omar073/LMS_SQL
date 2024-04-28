@@ -1,5 +1,3 @@
-# Python code
-
 import tkinter as tk
 from tkinter import messagebox
 from customtkinter import CTkLabel, CTkEntry, CTkButton
@@ -13,7 +11,7 @@ class SearchBookLibriran(tk.Frame):
 
         from librarian_homepage import LibrarianHomePage
         back_button = CTkButton(frame, text="Back", command=lambda: controller.show_page(LibrarianHomePage))
-        back_button.grid(row=0, column=0, padx=20, pady=10, columnspan=4)
+        back_button.grid(row=1, column=0, padx=20, pady=10, columnspan=4)
 
         # Search Label and Entry
         search_label = CTkLabel(frame, text="Search Book:", font=("Helvetica", 14))
@@ -41,6 +39,8 @@ class SearchBookLibriran(tk.Frame):
             genres = cursor.fetchall()
             for genre in genres:
                 frame.genre_options.append(genre[0])
+            
+            frame.genre_options.append("None")
         except Exception as e:
             print("Error fetching genres:", e)
             messagebox.showerror("Error", "An error occurred while fetching genres")
@@ -58,6 +58,8 @@ class SearchBookLibriran(tk.Frame):
             publishers = cursor.fetchall()
             for publisher in publishers:
                 frame.publisher_options.append(publisher[0])
+            
+            frame.publisher_options.append("None")
         except Exception as e:
             print("Error fetching publishers:", e)
             messagebox.showerror("Error", "An error occurred while fetching publishers")
@@ -99,30 +101,23 @@ class SearchBookLibriran(tk.Frame):
         for widget in frame.scrollable_frame_inner.winfo_children():
             widget.destroy()
 
-        # Get search criteria
         search_term = frame.search_entry.get()
-        selected_genre = frame.genre_option.get()
-        selected_publisher = frame.publisher_option.get()
+
+        # Get sort option
         sort_option = frame.sort_option.get()
 
+        # Get selected genre
+        selected_genre = frame.genre_option.get()
+
+        # Get selected publisher
+        selected_publisher = frame.publisher_option.get()
         try:
             cursor = frame.db_connection.cursor()
-            
-            # Check if all search criteria are empty
-            if not any([search_term, selected_genre, selected_publisher]):
-                # If all criteria are empty, load all books
-                frame.load_all_books()
-            else:
-                # Execute search only if at least one criteria is provided
-                cursor.execute("EXEC SearchBooks @SearchTerm=?, @Genre=?, @Publisher=?, @SortOption=?", 
-                            (search_term, selected_genre, selected_publisher, sort_option))
-                books = cursor.fetchall()
-                print(search_term, selected_genre, selected_publisher, sort_option, books)
-                
-                if not books:
-                    messagebox.showinfo("No Results", "No books match the search criteria.")
-                else:
-                    frame.display_books(books)
+            cursor.execute("EXEC SearchBooks @SearchTerm=?, @Genre=?, @Publisher=?, @SortOption=?", 
+                           (search_term, selected_genre, selected_publisher, sort_option))
+            books = cursor.fetchall()
+
+            frame.display_books(books)
 
         except Exception as e:
             print("Error:", e)
@@ -135,23 +130,31 @@ class SearchBookLibriran(tk.Frame):
             book_frame.grid(row=i // 3, column=i % 3, padx=5, pady=5, sticky="nsew")
 
             # Book Name Label
-            book_name_label = tk.Label(book_frame, text="Book Name: " + book[0], font=("Helvetica", 12))
+            book_name_label = tk.Label(book_frame, text="Book Name: " + book[1], font=("Helvetica", 12))
             book_name_label.pack(anchor="w", padx=10, pady=5)
 
             # Quantity Label
-            quantity_label = tk.Label(book_frame, text="Quantity: " + str(book[1]), font=("Helvetica", 12))
+            quantity_label = tk.Label(book_frame, text="Quantity: " + str(book[2]), font=("Helvetica", 12))
             quantity_label.pack(anchor="w", padx=10, pady=5)
 
             # Delete Button
-            delete_button = tk.Button(book_frame, text="Delete", command=lambda book_name=book[0]: frame.delete_book(book_name))
+            delete_button = tk.Button(book_frame, text="Delete", command=lambda book_id=book[0]: frame.delete_book(book_id))
             delete_button.pack(anchor="e", padx=10, pady=5)
 
         # Update the scroll region after adding books
         frame.canvas.configure(scrollregion=frame.canvas.bbox("all"))
 
-    def delete_book(frame, book_name):
-        # Implement functionality to delete the book
-        print("Deleting book:", book_name)
+    def delete_book(frame, book_id):
+        try:
+            cursor = frame.db_connection.cursor()
+            cursor.execute("EXEC DeleteBook @BookID=?  ", (book_id))
+            frame.db_connection.commit()
+            messagebox.showinfo("Success", "Book deleted successfully.")
+            frame.load_all_books()
+        except Exception as e:
+            print("Error:", e)
+            messagebox.showerror("Error", "An error occurred while deleting the book")
+
 
 
 # Test the SearchBookLibriran frame

@@ -52,14 +52,14 @@ CREATE TABLE Event (
 );
 
 CREATE TABLE Member (
-  Id INT PRIMARY KEY,
-  password VARCHAR(100) NOT NULL,
-  email VARCHAR(100) NOT NULL,
-  Name VARCHAR(100) NOT NULL, 
-  Gender CHAR(1) NOT NULL,
-  Street_name VARCHAR(100),
-  Building_number VARCHAR(50),
-  City VARCHAR(100)
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    password VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    Name VARCHAR(100) NOT NULL, 
+    Gender CHAR(1) NOT NULL,
+    Street_name VARCHAR(100),
+    Building_number VARCHAR(50),
+    City VARCHAR(100)
 );
 
 CREATE TABLE Member_phone (
@@ -134,60 +134,10 @@ RETURN
 
 
 
-CREATE PROCEDURE registeruser (
-    @password NVARCHAR(100),
-    @email NVARCHAR(100),
-    @name NVARCHAR(100),
-    @gender CHAR(1),
-    @street_name NVARCHAR(100),
-    @building_number NVARCHAR(50),
-    @city NVARCHAR(100)
-)
-AS
-BEGIN
-    BEGIN TRY
-        -- Insert data into Member table
-        INSERT INTO Member2 (password, email, Name, Gender, Street_name, Building_number, City)
-        VALUES (@password, @email,
-                @name, @gender, @street_name, @building_number, @city);
-
-        -- No need to set any result message since we're not using an output parameter
-    END TRY
-    BEGIN CATCH
-        -- You can handle errors here if needed
-        -- For simplicity, let's just print the error message
-        PRINT 'User registration failed. Error: ' + ERROR_MESSAGE();
-    END CATCH
-END;
-
-
-CREATE FUNCTION login1 (@Name NVARCHAR(100), @Password NVARCHAR(100))
-RETURNS TABLE
-AS
-RETURN
-(
-   SELECT 'Librarian' AS Role, Staff_ID, NAME, Email_address, NULL AS Gender, NULL AS Street_name, NULL AS Building_number, NULL AS City
-   FROM Librarian 
-   WHERE NAME = @Name AND password = @Password
-   UNION ALL
-   SELECT 'Member' AS Role, Id AS Staff_ID, Name, email, Gender, Street_name, Building_number, City
-   FROM Member2 
-   WHERE Name = @Name AND password = @Password
-);
-
-CREATE TABLE Member2 (
-    Id INT IDENTITY(1,1) PRIMARY KEY,
-    password VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    Name VARCHAR(100) NOT NULL, 
-    Gender CHAR(1) NOT NULL,
-    Street_name VARCHAR(100),
-    Building_number VARCHAR(50),
-    City VARCHAR(100)
-);
-
 ----------------------------------------------------------------
-SEARCH FUNCTION Kareem
+-------------------------- FUNCTION Kareem
+
+
 use lms3;
 go
 CREATE PROCEDURE SearchBooks
@@ -201,27 +151,32 @@ BEGIN
 
     DECLARE @Query NVARCHAR(MAX)
 
-    SET @Query = 'SELECT b.Title, b.Amount 
+    SET @Query = 'SELECT b.ISBN, b.Title, b.Amount 
                   FROM Book b'
 
-    IF @Genre <> '' AND @Genre IS NOT NULL
+    IF @Genre <> '' AND @Genre IS NOT NULL AND @Genre <> 'None'
     BEGIN
         SET @Query = @Query + ' INNER JOIN Genre g ON b.Genre_id = g.Genre_ID'
     END
 
-    IF @Publisher <> '' AND @Publisher IS NOT NULL
+    IF @Publisher <> '' AND @Publisher IS NOT NULL AND @Publisher <> 'None'
     BEGIN
         SET @Query = @Query + ' INNER JOIN Publisher p ON b.publisher_id = p.SSN'
     END
 
-    SET @Query = @Query + ' WHERE b.Title LIKE ''%' + @SearchTerm + '%'''
+    SET @Query = @Query + ' WHERE 1 = 1' -- Placeholder condition to append additional conditions
 
-    IF @Genre <> '' AND @Genre IS NOT NULL
+    IF @SearchTerm <> '' AND @SearchTerm IS NOT NULL
+    BEGIN
+        SET @Query = @Query + ' AND b.Title LIKE ''%' + @SearchTerm + '%'''
+    END
+
+    IF @Genre <> '' AND @Genre IS NOT NULL AND @Genre <> 'None'
     BEGIN
         SET @Query = @Query + ' AND g.NAME LIKE ''%' + @Genre + '%'''
     END
 
-    IF @Publisher <> '' AND @Publisher IS NOT NULL
+    IF @Publisher <> '' AND @Publisher IS NOT NULL AND @Publisher <> 'None'
     BEGIN
         SET @Query = @Query + ' AND p.NAME LIKE ''%' + @Publisher + '%'''
     END
@@ -238,3 +193,48 @@ BEGIN
     EXEC sp_executesql @Query
 END
 
+---------------------------------------------------------------------------
+CREATE PROCEDURE DeleteBook
+    @BookID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Query NVARCHAR(MAX)
+
+    -- Build the SQL query to delete the book with the specified ISBN
+    SET @Query = 'DELETE FROM Book WHERE ISBN = @BookID'
+
+    -- Execute the SQL query
+    EXEC sp_executesql @Query, N'@BookID INT', @BookID
+END
+---------------------------------------------------------------------------------
+
+========================Functio Youssef 
+Alter PROCEDURE registeruser (
+    @password NVARCHAR(100),
+    @email NVARCHAR(100),
+    @name NVARCHAR(100),
+    @gender CHAR(1),
+    @street_name NVARCHAR(100),
+    @building_number NVARCHAR(50),
+    @city NVARCHAR(100)
+)
+AS
+BEGIN
+    BEGIN TRY
+        -- Insert data into Member table
+        INSERT INTO Member (password, email, Name, Gender, Street_name, Building_number, City)
+        VALUES (@password, @email,
+                @name, @gender, @street_name, @building_number, @city);
+
+        -- No need to set any result message since we're not using an output parameter
+    END TRY
+    BEGIN CATCH
+        -- You can handle errors here if needed
+        -- For simplicity, let's just print the error message
+        PRINT 'User registration failed. Error: ' + ERROR_MESSAGE();
+    END CATCH
+END;
+
+=============================================================

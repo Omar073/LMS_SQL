@@ -13,8 +13,7 @@ class UserHomePage(tk.Frame):
         self.search_book_button.pack(pady=10)
 
         # Borrow Book Button
-        from borrow import BorrowBookPage
-        self.borrow_book_button = tk.Button(self, text="Borrow Book",command=lambda: self.controller.show_page(BorrowBookPage))
+        self.borrow_book_button = tk.Button(self, text="Borrow Book", command=self.borrow_book)
         self.borrow_book_button.pack(pady=10)
 
         # Attend Event Button
@@ -28,7 +27,8 @@ class UserHomePage(tk.Frame):
         
 
         # Logout Button
-        self.logout_button = tk.Button(self, text="Logout", command=self.logout)
+        from login_page import LoginPage
+        self.logout_button = tk.Button(self, text="Logout", command= lambda: self.controller.show_frame(LoginPage))
         self.logout_button.pack(pady=10)
 
     def search_book(self):

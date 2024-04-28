@@ -56,6 +56,7 @@ class RemoveUserPage(tk.Frame):
             cursor.execute("SELECT ID FROM Member WHERE ID=?", (user_id,))
             if not cursor.fetchone():
                 messagebox.showerror("Error", "User ID not found in the Member table")
+               
                 return
             
             # If the user ID exists, proceed to delete
@@ -66,6 +67,7 @@ class RemoveUserPage(tk.Frame):
             self.populate_user_ids()
         except Exception as e:
             messagebox.showerror("Error", str(e))
+            print(e)
         finally:
             cursor.close()
 
