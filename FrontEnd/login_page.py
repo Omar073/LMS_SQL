@@ -4,6 +4,8 @@ from db_connection import get_shared_connection
 
 LARGE_FONT= ("Verdana", 12)
 
+
+LoogedInUserID = -1
 class LoginPage(tk.Frame):  
 
     def __init__(self, parent, controller):  
@@ -48,16 +50,24 @@ class LoginPage(tk.Frame):
             cursor.execute("SELECT * FROM LibrarianSignInFunction(?, ?)", (username, password))
             rows = cursor.fetchall()
 
+            global LoogedInUserID
+
             if rows:
                 role = rows[0][0]  # Role is the first column of the result set
+
                 if role == 'Librarian':
                     print("Login successful as Librarian")
+
+                    LoogedInUserID = rows[0][1]
+
                     from librarian_homepage import LibrarianHomePage
                     self.controller.show_page(LibrarianHomePage)
                 elif role == 'Member':
 
                     print("Login successful as Member")
                     from user_homepage import UserHomePage
+                    
+                    LoogedInUserID = rows[0][1]
                     self.controller.show_page(UserHomePage)
                 else:
                     print("Login failed. Invalid username or password")
