@@ -1,8 +1,12 @@
 import tkinter as tk
 from tkinter import messagebox
+import logging  # Import the logging module
 from db_connection import get_shared_connection
 
-LARGE_FONT= ("Verdana", 12)
+# Configure logging
+logging.basicConfig(filename='app.log', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+
+LARGE_FONT = ("Verdana", 12)
 
 class LoginPage(tk.Frame):  
 
@@ -10,6 +14,10 @@ class LoginPage(tk.Frame):
         tk.Frame.__init__(self, parent) 
         self.controller = controller
         self.db_connection = get_shared_connection()
+
+        # increase the width of the frame and set the height
+        self.config(width=1000, height=1000)
+
 
         # Username Label and Entry
         username_label = tk.Label(self, text="Username:", font=("Helvetica", 14))
@@ -28,48 +36,40 @@ class LoginPage(tk.Frame):
         login_button.place(relx=0.5, rely=0.6, anchor="center")
 
         # Signup Button
-        from sign_up_page import SignUp as Sig
-        signup_button = tk.Button(self, text="Signup", font=("Helvetica", 14), command=lambda: controller.show_page(Sig))
-        signup_button.place(relx=0.5, rely=0.65, anchor="center")
+
+        from sign_up_page import SignUp 
+        signup_button = tk.Button(self, text="Signup", font=("Helvetica", 14), command=lambda: controller.show_page(SignUp))
+        signup_button.grid(row=3, columnspan=2, padx=20, pady=10)
+
 
     def login(self):
-        username = self.username_entry.get()
+        name = self.username_entry.get()  # Get the name instead of the username
         password = self.password_entry.get()
 
-        if not username or not password:
-            messagebox.showerror("Login Failed", "Username and password are required")
+        if not name or not password:
+            messagebox.showerror("Login Failed", "Name and password are required")
             return
-        
 
         try:
             cursor = self.db_connection.cursor()
 
             # Execute the SQL function for sign-in
-            cursor.execute("SELECT * FROM LibrarianSignInFunction(?, ?)", (username, password))
+            cursor.execute("SELECT * FROM login1(?, ?)", (name, password))
             rows = cursor.fetchall()
 
             if rows:
-                role = rows[0][0]  # Role is the first column of the result set
-                if role == 'Librarian':
-                    print("Login successful as Librarian")
-                    from librarian_homepage import LibrarianHomePage
-                    self.controller.show_page(LibrarianHomePage)
-                elif role == 'Member':
-
-                    print("Login successful as Member")
-                    from user_homepage import UserHomePage
-                    self.controller.show_page(UserHomePage)
-                else:
-                    print("Login failed. Invalid username or password")
-                    messagebox.showerror("Login Failed", "Invalid username or password")
+                print("Login successful")
+                from user_homepage import UserHomePage  # Import user homepage
+                self.controller.show_page(UserHomePage)  # Redirect to user homepage
             else:
-                print("Login failed. Invalid username or password")
-                messagebox.showerror("Login Failed", "Invalid username or password")
+                print("Login failed. Invalid name or password")
+                messagebox.showerror("Login Failed", "Invalid name or password")
 
         except Exception as e:
             print("Error:", e)
+            logging.error("An error occurred during login: %s", e)  # Log the error
         finally:
             cursor.close()
 
     def show_signup_page(self):
-        pass  
+        pass
