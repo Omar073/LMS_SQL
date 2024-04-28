@@ -29,10 +29,12 @@ class SeaofBTCapp(tk.Tk):
         
         self.frames = {}  
   
-        for F in (LoginPage, LibrarianHomePage, UserHomePage , SignUp ,SearchBookLibriran,AddUserPage,RemoveUserPage ,SearchBookUser,ReturnBorrowedBook):  
-            frame = F(container, self)  
-            self.frames[F] = frame  
-            frame.grid(row=0, column=0, sticky="nsew")  
+
+
+        for F in (LoginPage, LibrarianHomePage, UserHomePage , SignUp ,SearchBookLibriran,AddUserPage,RemoveUserPage,ReturnBorrowedBook,HistoryPage, SearchBookUser):
+            frame = F(container, self)
+            self.frames[F] = frame
+            frame.grid(row=0, column=0, sticky="nsew")
   
         self.show_frame(LoginPage)  
   
