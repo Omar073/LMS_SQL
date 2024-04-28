@@ -9,6 +9,8 @@ from add_user import AddUserPage
 from remove_user import RemoveUserPage
 from search_book_user import SearchBookUser
 from return_borrow_book import ReturnBorrowedBook
+from history import HistoryPage
+from add_book import AddBook
   
 LARGE_FONT= ("Verdana", 12)  
   
@@ -31,7 +33,7 @@ class SeaofBTCapp(tk.Tk):
   
 
 
-        for F in (LoginPage, LibrarianHomePage, UserHomePage , SignUp ,SearchBookLibriran,AddUserPage,RemoveUserPage,ReturnBorrowedBook,HistoryPage, SearchBookUser):
+        for F in (LoginPage, LibrarianHomePage, UserHomePage , SignUp ,SearchBookLibriran,AddUserPage,RemoveUserPage,ReturnBorrowedBook,HistoryPage, SearchBookUser,AddBook):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")

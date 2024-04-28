@@ -57,7 +57,8 @@ class LibrarianHomePage(tk.Frame):
         return card
 
     def add_book(self):
-        print("Adding a book...")
+        from add_book import AddBook
+        self.controller.show_page(AddBook)
 
     def remove_book(self):
         print("Removing a book...")
