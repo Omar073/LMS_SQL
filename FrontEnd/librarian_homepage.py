@@ -36,6 +36,10 @@ class LibrarianHomePage(tk.Frame):
         add_user_card = self.create_card(scrollable_frame, "Add User", self.add_user)
         add_user_card.pack(padx=10, pady=10, fill='x')
 
+        #Add Genre Card
+        add_genre_card = self.create_card(scrollable_frame, "Add Genre", self.add_genre)
+        add_genre_card.pack(padx=10, pady=10, fill='x')
+
         # Remove User Card
         remove_user_card = self.create_card(scrollable_frame, "Remove User", self.remove_user)
         remove_user_card.pack(padx=10, pady=10, fill='x')
@@ -81,3 +85,7 @@ class LibrarianHomePage(tk.Frame):
     def logout(self):
         from login_page import LoginPage
         self.controller.show_page(LoginPage)
+    
+    def add_genre(self):
+        from add_genre import AddGenre
+        self.controller.show_page(AddGenre)

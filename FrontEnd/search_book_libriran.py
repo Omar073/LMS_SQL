@@ -13,6 +13,11 @@ class SearchBookLibriran(tk.Frame):
         back_button = CTkButton(frame, text="Back", command=lambda: controller.show_page(LibrarianHomePage))
         back_button.grid(row=0, column=0, columnspan=4)
 
+        #Refresh Button for refreshing the page and Genres and Publishers
+        refresh_button = CTkButton(frame, text="Refresh", command=frame.load_all_books)
+        refresh_button.grid(row=0, column=5, columnspan=4)
+
+
         # Search Label and Entry
         search_label = CTkLabel(frame, text="Search Book:", font=("Helvetica", 14))
         search_label.grid(row=1, column=0, padx=20, pady=10, sticky="e")
@@ -154,6 +159,8 @@ class SearchBookLibriran(tk.Frame):
         except Exception as e:
             print("Error:", e)
             messagebox.showerror("Error", "An error occurred while deleting the book")
+
+            
 
 
 

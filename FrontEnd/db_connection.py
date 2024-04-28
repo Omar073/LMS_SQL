@@ -3,8 +3,8 @@ import pyodbc
 
 # Database connection parameters
 
-server = 'TheBlackBone'
-database = 'lms3'
+server = 'DESKTOP-M1K1OIB'
+database = 'lms5'
 
 driver = 'SQL SERVER'
 trusted_connection = 'yes'
