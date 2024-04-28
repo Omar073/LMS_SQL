@@ -14,7 +14,7 @@ class SearchBookLibriran(tk.Frame):
         back_button.grid(row=0, column=0, columnspan=4)
 
         #Refresh Button for refreshing the page and Genres and Publishers
-        refresh_button = CTkButton(frame, text="Refresh", command=frame.load_all_books)
+        refresh_button = CTkButton(frame, text="Refresh", command=frame.refreshPublisherandGenres)
         refresh_button.grid(row=0, column=5, columnspan=4)
 
 
@@ -159,6 +159,45 @@ class SearchBookLibriran(tk.Frame):
         except Exception as e:
             print("Error:", e)
             messagebox.showerror("Error", "An error occurred while deleting the book")
+    
+    def refreshPublisherandGenres (frame):
+        try:
+            cursor = frame.db_connection.cursor()
+            cursor.execute("SELECT NAME FROM Genre")
+            genres = cursor.fetchall()
+            frame.genre_options = []
+            for genre in genres:
+                frame.genre_options.append(genre[0])
+            
+            frame.genre_options.append("None")
+        except Exception as e:
+            print("Error fetching genres:", e)
+            messagebox.showerror("Error", "An error occurred while fetching genres")
+        frame.genre_option = tk.StringVar(frame)
+        frame.genre_option.set("None")
+        genre_dropdown = tk.OptionMenu(frame, frame.genre_option, *frame.genre_options)
+        genre_dropdown.config(font=("Helvetica", 14), width=15)
+        genre_dropdown.grid(row=1, column=5, padx=20, pady=10)
+
+        try:
+            cursor = frame.db_connection.cursor()
+            cursor.execute("SELECT NAME FROM Publisher")
+            publishers = cursor.fetchall()
+            frame.publisher_options = []
+            for publisher in publishers:
+                frame.publisher_options.append(publisher[0])
+            
+            frame.publisher_options.append("None")
+        except Exception as e:
+            print("Error fetching publishers:", e)
+            messagebox.showerror("Error", "An error occurred while fetching publishers")
+        frame.publisher_option = tk.StringVar(frame)
+        frame.publisher_option.set("None")
+        publisher_dropdown = tk.OptionMenu(frame, frame.publisher_option, *frame.publisher_options)
+        publisher_dropdown.config(font=("Helvetica", 14), width=15)
+        publisher_dropdown.grid(row=1, column=6, padx=20, pady=10)
+        
+        
 
             
 
