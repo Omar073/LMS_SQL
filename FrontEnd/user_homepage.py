@@ -1,7 +1,10 @@
 import tkinter as tk
 
+from events_page import EventsPage
+from settings_page import SettingsPage
+
 class UserHomePage(tk.Frame):  
-  
+    
     def __init__(self, parent, controller):  
         tk.Frame.__init__(self, parent) 
         self.controller = controller
@@ -42,11 +45,14 @@ class UserHomePage(tk.Frame):
     def attend_event(self):
         # Implement functionality to attend an event
         print("Attending an event...")
+        self.controller.show_page(EventsPage)
 
     def settings(self):
-        # Implement functionality to access user settings
+        # Implement functionality to access  user settings
         print("Accessing settings...")
+        self.controller.show_page(SettingsPage)
 
     def logout(self):
         # Implement functionality to logout
+
         self.controller.show_frame(LoginPage)
