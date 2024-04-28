@@ -1,3 +1,5 @@
+# Python code
+
 import tkinter as tk
 from tkinter import messagebox
 from customtkinter import CTkLabel, CTkEntry, CTkButton
@@ -11,7 +13,7 @@ class SearchBookLibriran(tk.Frame):
 
         from librarian_homepage import LibrarianHomePage
         back_button = CTkButton(frame, text="Back", command=lambda: controller.show_page(LibrarianHomePage))
-        back_button.grid(row=1, column=0, padx=20, pady=10, columnspan=4)
+        back_button.grid(row=0, column=0, padx=20, pady=10, columnspan=4)
 
         # Search Label and Entry
         search_label = CTkLabel(frame, text="Search Book:", font=("Helvetica", 14))
@@ -39,7 +41,6 @@ class SearchBookLibriran(tk.Frame):
             genres = cursor.fetchall()
             for genre in genres:
                 frame.genre_options.append(genre[0])
-            frame.genre_options.append("None")
         except Exception as e:
             print("Error fetching genres:", e)
             messagebox.showerror("Error", "An error occurred while fetching genres")
@@ -57,8 +58,6 @@ class SearchBookLibriran(tk.Frame):
             publishers = cursor.fetchall()
             for publisher in publishers:
                 frame.publisher_options.append(publisher[0])
-            
-            frame.publisher_options.append("None")
         except Exception as e:
             print("Error fetching publishers:", e)
             messagebox.showerror("Error", "An error occurred while fetching publishers")
@@ -86,7 +85,7 @@ class SearchBookLibriran(tk.Frame):
     def load_all_books(frame):
         try:
             cursor = frame.db_connection.cursor()
-            cursor.execute("SELECT Title, Amount FROM Book")
+            cursor.execute("EXEC SearchBooks @SearchTerm='', @Genre='', @Publisher='', @SortOption='None'")
             books = cursor.fetchall()
 
             frame.display_books(books)
@@ -100,36 +99,30 @@ class SearchBookLibriran(tk.Frame):
         for widget in frame.scrollable_frame_inner.winfo_children():
             widget.destroy()
 
+        # Get search criteria
         search_term = frame.search_entry.get()
-
-        # Get sort option
+        selected_genre = frame.genre_option.get()
+        selected_publisher = frame.publisher_option.get()
         sort_option = frame.sort_option.get()
 
-        # Get selected genre
-        selected_genre = frame.genre_option.get()
-
-        # Get selected publisher
-        selected_publisher = frame.publisher_option.get()
-
         try:
-            # Construct SQL query based on filter and sort options
-            query = "SELECT b.Title, b.Amount FROM Book b WHERE b.Title LIKE '%" + search_term + "%'"
-            if selected_genre != "None":
-                query += " AND b.Genre_id IN (SELECT Genre_ID FROM Genre WHERE NAME LIKE '%" + selected_genre + "%')"
-            if selected_publisher != "None":
-                query += " AND b.publisher_id IN (SELECT SSN FROM Publisher WHERE NAME LIKE '%" + selected_publisher + "%')"
-
-            # Complete the query and execute it
-            if sort_option == "Ascending":
-                query += " ORDER BY b.Amount ASC"
-
-            # Execute SQL query
             cursor = frame.db_connection.cursor()
-            cursor.execute(query)
-            books = cursor.fetchall()
-
-            # Display search results
-            frame.display_books(books)
+            
+            # Check if all search criteria are empty
+            if not any([search_term, selected_genre, selected_publisher]):
+                # If all criteria are empty, load all books
+                frame.load_all_books()
+            else:
+                # Execute search only if at least one criteria is provided
+                cursor.execute("EXEC SearchBooks @SearchTerm=?, @Genre=?, @Publisher=?, @SortOption=?", 
+                            (search_term, selected_genre, selected_publisher, sort_option))
+                books = cursor.fetchall()
+                print(search_term, selected_genre, selected_publisher, sort_option, books)
+                
+                if not books:
+                    messagebox.showinfo("No Results", "No books match the search criteria.")
+                else:
+                    frame.display_books(books)
 
         except Exception as e:
             print("Error:", e)
