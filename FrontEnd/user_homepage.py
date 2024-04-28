@@ -13,10 +13,12 @@ class UserHomePage(tk.Frame):
         self.search_book_button.pack(pady=10)
 
         # Borrow Book Button
-        self.borrow_book_button = tk.Button(self, text="Borrow Book", command=self.borrow_book)
+        from borrow import BorrowBookPage
+        self.borrow_book_button = tk.Button(self, text="Borrow Book", command= lambda: self.controller.show_frame(BorrowBookPage))
         self.borrow_book_button.pack(pady=10)
 
         # Attend Event Button
+
         self.attend_event_button = tk.Button(self, text="Attend Event", command=self.attend_event)
         self.attend_event_button.pack(pady=10)
 
