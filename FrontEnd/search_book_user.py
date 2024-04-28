@@ -143,13 +143,15 @@ class SearchBookUser(tk.Frame):
             Borrow_button = tk.Button(book_frame, text="Borrow", command=lambda book_id=book[0]: frame.Borrow_book(book_id))
             Borrow_button.pack(anchor="e", padx=10, pady=5)
 
+            
+
         # Update the scroll region after adding books
         frame.canvas.configure(scrollregion=frame.canvas.bbox("all"))
 
     def Borrow_book(frame, book_id):
         try:
             from login_page import LoogedInUserID
-            print("Logged in user ID:", LoogedInUserID)
+            print("Borwooign in user ID:", LoogedInUserID)
             print("Borrowing book:", book_id)
             cursor = frame.db_connection.cursor()
 
