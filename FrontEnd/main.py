@@ -16,17 +16,25 @@ class SeaofBTCapp(tk.Tk):
           
         tk.Tk.__init__(self, *args, **kwargs)  
         container = tk.Frame(self)  
+        container.pack_propagate(False)  
+
+        
+
+        container.config(width=1000, height=1000)
+
   
         container.pack(side="top", fill="both", expand=True)  
   
         container.grid_rowconfigure(0, weight=1)  
         container.grid_columnconfigure(0, weight=1)  
-  
+
+        
         self.frames = {}  
   
         for F in (LoginPage, LibrarianHomePage, UserHomePage , SignUp ):  
             frame = F(container, self)  
             self.frames[F] = frame  
+            frame.config(width=10000, height=10000)
             frame.grid(row=0, column=0, sticky="nsew")  
   
         self.show_frame(LoginPage)  

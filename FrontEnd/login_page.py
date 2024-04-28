@@ -10,6 +10,11 @@ class LoginPage(tk.Frame):
         tk.Frame.__init__(self, parent) 
         self.controller = controller
         self.db_connection = get_shared_connection()
+        # increase the width of the frame and set the height
+        self.config(width=1000, height=1000)
+
+        
+
 
         # Username Label and Entry
         username_label = tk.Label(self, text="Username:", font=("Helvetica", 14))

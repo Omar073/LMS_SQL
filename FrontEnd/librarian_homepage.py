@@ -6,6 +6,8 @@ class LibrarianHomePage(tk.Frame):
     def __init__(self, parent, controller):  
         tk.Frame.__init__(self, parent) 
         self.controller = controller
+        self.config(width=800, height=600)
+
 
         # Add Book Button
         add_book_button = tk.Button(self, text="Add Book", command=self.add_book)

@@ -9,6 +9,7 @@ class SignUp(tk.Frame):
         tk.Frame.__init__(self,parent) 
         self.controller = controller
         self.db_connection = get_shared_connection()
+        self.config(width=800, height=600)
           # Username Label and Entry
         username_label = tk.Label(self, text="Username:", font=("Helvetica", 14))
         username_label.grid(row=0, column=0, padx=20, pady=10, sticky="e")

@@ -5,6 +5,7 @@ class UserHomePage(tk.Frame):
     def __init__(self, parent, controller):  
         tk.Frame.__init__(self,parent) 
         self.controller = controller
+        self.config(width=800, height=600)
       
 
         # Search Book Button
