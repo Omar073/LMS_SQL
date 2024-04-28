@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from add_user import AddUserPage
+from remove_user import RemoveUserPage
 
 class LibrarianHomePage(tk.Frame):  
 
@@ -60,6 +61,7 @@ class LibrarianHomePage(tk.Frame):
 
     def remove_user(self):
         # Implement functionality to remove a user
+        self.controller.show_page(RemoveUserPage)
         print("Removing a user...")
 
     def add_event(self):
