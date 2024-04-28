@@ -1,10 +1,11 @@
 import tkinter as tk
 from tkinter import messagebox
+from add_user import AddUserPage
 
 class LibrarianHomePage(tk.Frame):  
 
     def __init__(self, parent, controller):  
-        tk.Frame.__init__(self, parent) 
+        tk.Frame.__init__(self, parent, width=800, height=600) 
         self.controller = controller
         self.config(width=800, height=600)
 
@@ -18,6 +19,7 @@ class LibrarianHomePage(tk.Frame):
         remove_book_button.pack(pady=10)
 
         # Add User Button
+        from add_user import AddUserPage
         add_user_button = tk.Button(self, text="Add User", command=self.add_user)
         add_user_button.pack(pady=10)
 
@@ -30,13 +32,17 @@ class LibrarianHomePage(tk.Frame):
         add_event_button.pack(pady=10)
 
         # Search Book Button
-        search_book_button = tk.Button(self, text="Search Book", command=self.search_book)
+        from search_book_libriran import SearchBookLibriran
+        search_book_button = tk.Button(self, text="Search Book", command= lambda: self.controller.show_page(SearchBookLibriran))
         search_book_button.pack(pady=10)
 
         # Logout Button
         from login_page import LoginPage
         logout_button = tk.Button(self, text="Logout", command=lambda: self.controller.show_page(LoginPage))
         logout_button.pack(pady=10)
+        
+        
+        
 
 
     def add_book(self):
@@ -49,6 +55,7 @@ class LibrarianHomePage(tk.Frame):
 
     def add_user(self):
         # Implement functionality to add a user
+        self.controller.show_page(AddUserPage)
         print("Adding a user...")
 
     def remove_user(self):
