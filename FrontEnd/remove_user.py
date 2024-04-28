@@ -31,7 +31,7 @@ class RemoveUserPage(tk.Frame):
     def populate_user_ids(self, *args):
         try:
             cursor = self.db_connection.cursor()
-            cursor.execute("SELECT ID FROM Member")
+            cursor.execute("SELECT Id FROM Member")
             user_ids = cursor.fetchall()
             user_id_list = [str(user[0]) for user in user_ids]
             self.user_id_dropdown['menu'].delete(0, 'end')
@@ -41,7 +41,6 @@ class RemoveUserPage(tk.Frame):
             messagebox.showerror("Error", str(e))
         finally:
             cursor.close()
-
 
     def remove_user(self):
         user_id = self.selected_user_id.get()
@@ -53,21 +52,20 @@ class RemoveUserPage(tk.Frame):
         try:
             cursor = self.db_connection.cursor()
             # Check if the user ID exists in the Member table
-            cursor.execute("SELECT ID FROM Member WHERE ID=?", (user_id,))
-            if not cursor.fetchone():
+            cursor.execute("SELECT Id FROM Member WHERE Id=?", (user_id,))
+            member = cursor.fetchone()
+            if not member:
                 messagebox.showerror("Error", "User ID not found in the Member table")
-               
                 return
-            
-            # If the user ID exists, proceed to delete
-            cursor.execute("DELETE FROM Member WHERE ID=?", (user_id,))
+
+            # If the user ID exists, call the stored procedure to remove the member by ID
+            cursor.execute("EXEC RemoveMemberByID ?", (user_id,))
             self.db_connection.commit()
             messagebox.showinfo("Success", "User removed successfully")
             # Repopulate dropdown after removing user
             self.populate_user_ids()
         except Exception as e:
             messagebox.showerror("Error", str(e))
-            print(e)
         finally:
             cursor.close()
 
