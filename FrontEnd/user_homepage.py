@@ -27,7 +27,8 @@ class UserHomePage(tk.Frame):
         
 
         # Logout Button
-        self.logout_button = tk.Button(self, text="Logout", command=self.logout)
+        from login_page import LoginPage
+        self.logout_button = tk.Button(self, text="Logout", command= lambda: self.controller.show_frame(LoginPage))
         self.logout_button.pack(pady=10)
 
     def search_book(self):

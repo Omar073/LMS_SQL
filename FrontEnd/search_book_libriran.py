@@ -143,19 +143,27 @@ class SearchBookLibriran(tk.Frame):
             book_name_label.pack(anchor="w", padx=10, pady=5)
 
             # Quantity Label
-            quantity_label = tk.Label(book_frame, text="Quantity: " + str(book[1]), font=("Helvetica", 12))
+            quantity_label = tk.Label(book_frame, text="Quantity: " + str(book[2]), font=("Helvetica", 12))
             quantity_label.pack(anchor="w", padx=10, pady=5)
 
             # Delete Button
-            delete_button = tk.Button(book_frame, text="Delete", command=lambda book_name=book[1]: frame.delete_book(book_name))
+            delete_button = tk.Button(book_frame, text="Delete", command=lambda book_id=book[0]: frame.delete_book(book_id))
             delete_button.pack(anchor="e", padx=10, pady=5)
 
         # Update the scroll region after adding books
         frame.canvas.configure(scrollregion=frame.canvas.bbox("all"))
 
-    def delete_book(frame, book_name):
-        # Implement functionality to delete the book
-        print("Deleting book:", book_name)
+    def delete_book(frame, book_id):
+        try:
+            cursor = frame.db_connection.cursor()
+            cursor.execute("EXEC DeleteBook @BookID=?  ", (book_id))
+            frame.db_connection.commit()
+            messagebox.showinfo("Success", "Book deleted successfully.")
+            frame.load_all_books()
+        except Exception as e:
+            print("Error:", e)
+            messagebox.showerror("Error", "An error occurred while deleting the book")
+
 
 
 # Test the SearchBookLibriran frame
