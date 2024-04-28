@@ -3,6 +3,7 @@ from tkinter import ttk
 from login_page import LoginPage
 from librarian_homepage import LibrarianHomePage
 from user_homepage import UserHomePage
+from sign_up_page import SignUp
 
   
   
@@ -23,7 +24,7 @@ class SeaofBTCapp(tk.Tk):
   
         self.frames = {}  
   
-        for F in (LoginPage, LibrarianHomePage, UserHomePage):  
+        for F in (LoginPage, LibrarianHomePage, UserHomePage , SignUp ):  
             frame = F(container, self)  
             self.frames[F] = frame  
             frame.grid(row=0, column=0, sticky="nsew")  

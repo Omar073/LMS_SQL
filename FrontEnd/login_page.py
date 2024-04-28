@@ -28,13 +28,18 @@ class LoginPage(tk.Frame):
         login_button.grid(row=2, columnspan=2, padx=20, pady=20)
 
         # Signup Button
-        from librarian_homepage import LibrarianHomePage
-        signup_button = tk.Button(self, text="Signup", font=("Helvetica", 14), command=lambda: controller.show_page(LibrarianHomePage))
+        from sign_up_page import SignUp as Sig
+        signup_button = tk.Button(self, text="Signup", font=("Helvetica", 14), command=lambda: controller.show_page(Sig))
         signup_button.grid(row=3, columnspan=2, padx=20, pady=10)
 
     def login(self):
         username = self.username_entry.get()
         password = self.password_entry.get()
+
+        if not username or not password:
+            messagebox.showerror("Login Failed", "Username and password are required")
+            return
+        
 
         try:
             cursor = self.db_connection.cursor()
@@ -47,10 +52,13 @@ class LoginPage(tk.Frame):
                 role = rows[0][0]  # Role is the first column of the result set
                 if role == 'Librarian':
                     print("Login successful as Librarian")
-                    # Handle successful login as Librarian
+                    from librarian_homepage import LibrarianHomePage
+                    self.controller.show_page(LibrarianHomePage)
                 elif role == 'Member':
+
                     print("Login successful as Member")
-                    # Handle successful login as Member
+                    from user_homepage import UserHomePage
+                    self.controller.show_page(UserHomePage)
                 else:
                     print("Login failed. Invalid username or password")
                     messagebox.showerror("Login Failed", "Invalid username or password")
@@ -64,5 +72,4 @@ class LoginPage(tk.Frame):
             cursor.close()
 
     def show_signup_page(self):
-        # Handle navigation to the signup page
-        pass  # Implement this method as needed
+        pass  
