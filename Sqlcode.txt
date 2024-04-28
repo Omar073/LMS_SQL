@@ -1,0 +1,131 @@
+CREATE DATABASE lms3;
+
+USE lms3;
+
+-- Create tables without foreign key constraints
+CREATE TABLE Book (
+  ISBN INT PRIMARY KEY,
+  Title VARCHAR(100) NOT NULL,
+  DateofPrint Date,
+  member_id INT,
+  amount INT,
+  publisher_id INT,
+  Genre_id INT
+);
+
+CREATE TABLE Publisher (
+  SSN INT PRIMARY KEY,
+  NAME VARCHAR(100) NOT NULL,
+  Nationality VARCHAR(100)
+);
+
+CREATE TABLE Librarian (
+  Staff_ID INT PRIMARY KEY,
+  NAME VARCHAR(100) NOT NULL,
+  password VARCHAR(100) NOT NULL,
+  Email_address VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Author (
+  SSN INT PRIMARY KEY,
+  Name VARCHAR(100) NOT NULL,
+  Nationality VARCHAR(100),
+  Biography TEXT
+);
+
+CREATE TABLE Report (
+  Report_No INT PRIMARY KEY,
+  issue INT,
+  Staff_id INT
+);
+
+CREATE TABLE Genre (
+  Genre_ID INT PRIMARY KEY,
+  Number_of_books INT,
+  NAME VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Event (
+  Event_Id INT PRIMARY KEY,
+  Title VARCHAR(100) NOT NULL,
+  Event_date DATE
+);
+
+CREATE TABLE Member (
+  Id INT PRIMARY KEY,
+  password VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  Name VARCHAR(100) NOT NULL, 
+  Gender CHAR(1) NOT NULL,
+  Street_name VARCHAR(100),
+  Building_number VARCHAR(50),
+  City VARCHAR(100)
+);
+
+CREATE TABLE Member_phone (
+  phone_number VARCHAR(15) NOT NULL, 
+  member_id INT,
+  PRIMARY KEY (phone_number, member_id)
+);
+
+CREATE TABLE Publisher_phone (
+  phone_number VARCHAR(15) NOT NULL, 
+  PublisherId INT,
+  PRIMARY KEY (phone_number, PublisherId)
+);
+
+CREATE TABLE Librarian_phone (
+  phone_number VARCHAR(15) NOT NULL,
+  LibrarianID INT,
+  PRIMARY KEY (phone_number, LibrarianID)
+);
+
+CREATE TABLE Authors_Book (
+  ISBN INT,
+  author_id INT,
+  PRIMARY KEY (ISBN, author_id)
+);
+
+CREATE TABLE Attended_Event (
+  member_id INT,
+  event_id INT,
+  PRIMARY KEY (member_id, event_id)
+);
+
+CREATE TABLE Borrowing_Member (
+  ISBN INT,
+  member_id INT,
+  return_date DATE,
+  borrow_date DATE,
+  PRIMARY KEY (ISBN, member_id)
+);
+
+-- Add foreign key constraints
+ALTER TABLE Book ADD FOREIGN KEY (publisher_id) REFERENCES Publisher(SSN);
+ALTER TABLE Book ADD FOREIGN KEY (Genre_id) REFERENCES Genre(Genre_ID);
+ALTER TABLE Report ADD FOREIGN KEY (Staff_id) REFERENCES Librarian(Staff_ID);
+ALTER TABLE Member_phone ADD FOREIGN KEY (member_id) REFERENCES Member(Id);
+ALTER TABLE Publisher_phone ADD FOREIGN KEY (PublisherId) REFERENCES Publisher(SSN);
+ALTER TABLE Librarian_phone ADD FOREIGN KEY (LibrarianID) REFERENCES Librarian(Staff_ID);
+ALTER TABLE Authors_Book ADD FOREIGN KEY (ISBN) REFERENCES Book(ISBN);
+ALTER TABLE Authors_Book ADD FOREIGN KEY (author_id) REFERENCES Author(SSN);
+ALTER TABLE Attended_Event ADD FOREIGN KEY (member_id) REFERENCES Member(Id);
+ALTER TABLE Attended_Event ADD FOREIGN KEY (event_id) REFERENCES Event(Event_Id);
+ALTER TABLE Borrowing_Member ADD FOREIGN KEY (ISBN) REFERENCES Book(ISBN);
+ALTER TABLE Borrowing_Member ADD FOREIGN KEY (member_id) REFERENCES Member(Id);
+
+
+
+CREATE FUNCTION LibrarianSignInFunction (@Staff_ID INT, @Password NVARCHAR(100))
+RETURNS TABLE
+AS
+RETURN
+(
+   SELECT 'Librarian' AS Role, Staff_ID, NAME, Email_address, NULL AS Gender, NULL AS Street_name, NULL AS Building_number, NULL AS City
+   FROM Librarian 
+   WHERE Staff_ID = @Staff_ID AND password = @Password
+   UNION ALL
+   SELECT 'Member' AS Role, Id AS Staff_ID, Name, email, Gender, Street_name, Building_number, City
+   FROM Member 
+   WHERE Id = @Staff_ID AND password = @Password
+); 
