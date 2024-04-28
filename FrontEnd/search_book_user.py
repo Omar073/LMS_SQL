@@ -140,20 +140,40 @@ class SearchBookUser(tk.Frame):
             quantity_label.pack(anchor="w", padx=10, pady=5)
 
             # Delete Button
-            delete_button = tk.Button(book_frame, text="Delete", command=lambda book_name=book[1]: frame.delete_book(book_name))
-            delete_button.pack(anchor="e", padx=10, pady=5)
+            Borrow_button = tk.Button(book_frame, text="Borrow", command=lambda book_id=book[0]: frame.Borrow_book(book_id))
+            Borrow_button.pack(anchor="e", padx=10, pady=5)
 
         # Update the scroll region after adding books
         frame.canvas.configure(scrollregion=frame.canvas.bbox("all"))
 
-    def delete_book(frame, book_name):
-        # Implement functionality to delete the book
-        print("Deleting book:", book_name)
+    def Borrow_book(frame, book_id):
+        try:
+            from login_page import LoogedInUserID
+            print("Logged in user ID:", LoogedInUserID)
+            print("Borrowing book:", book_id)
+            cursor = frame.db_connection.cursor()
 
 
-# Test the SearchBookLibriran frame
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = SearchBookLibriran(root, None)
-    app.pack(fill=tk.BOTH, expand=True)
-    root.mainloop()
+            if not LoogedInUserID:
+                messagebox.showerror("Error", "Please login to borrow a book.")
+                return
+            elif not book_id:
+                messagebox.showerror("Error", "Invalid book ID.")
+                return
+            elif not frame.db_connection:
+                messagebox.showerror("Error", "Database connection not available.")
+                return
+            elif LoogedInUserID == -1:
+                messagebox.showerror("Error", "Please login to borrow a book.")
+                return
+            else:
+                user_id = LoogedInUserID
+                cursor.execute("EXEC Borrow_Book @ISBN=?, @member_id=?", (book_id, user_id))
+                frame.db_connection.commit()
+                messagebox.showinfo("Success", "Book borrowed successfully.")
+            
+        except Exception as e:
+            print("Error borrowing book:", e)
+            messagebox.showerror("Error", "An error occurred while borrowing the book.")
+
+

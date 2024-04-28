@@ -134,6 +134,9 @@ RETURN
 
 
 
+
+
+
 ----------------------------------------------------------------
 -------------------------- FUNCTION Kareem
 
@@ -238,3 +241,26 @@ BEGIN
 END;
 
 =============================================================
+CREATE PROCEDURE Borrow_Book
+    @ISBN INT,
+    @member_id INT,
+    @return_date DATE = NULL
+AS
+BEGIN
+    -- Check if the book is available for borrowing
+    IF EXISTS (SELECT 1 FROM Book WHERE ISBN = @ISBN AND amount > 0)
+    BEGIN
+        -- Decrement the quantity of the book
+        UPDATE Book SET amount = amount - 1 WHERE ISBN = @ISBN;
+
+        -- Insert the borrowing record
+        INSERT INTO Borrowing_Member (ISBN, member_id, return_date, borrow_date)
+        VALUES (@ISBN, @member_id, @return_date, GETDATE());
+
+        PRINT 'Book borrowed successfully.';
+    END
+    ELSE
+    BEGIN
+        RAISERROR ('Book is not available for borrowing.', 16, 1);
+    END
+END;
