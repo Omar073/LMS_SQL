@@ -3,7 +3,7 @@ import pyodbc
 
 # Database connection parameters
 server = 'DESKTOP-M1K1OIB'
-database = 'lms3'
+database = 'lms5'
 driver = 'SQL SERVER'
 trusted_connection = 'yes'
 conn_str = f"DRIVER={driver};SERVER={server};DATABASE={database};TRUSTED_CONNECTION={trusted_connection}"

@@ -41,6 +41,8 @@ class SearchBookLibriran(tk.Frame):
             genres = cursor.fetchall()
             for genre in genres:
                 frame.genre_options.append(genre[0])
+            frame.genre_options.append("None")
+
         except Exception as e:
             print("Error fetching genres:", e)
             messagebox.showerror("Error", "An error occurred while fetching genres")
@@ -58,6 +60,8 @@ class SearchBookLibriran(tk.Frame):
             publishers = cursor.fetchall()
             for publisher in publishers:
                 frame.publisher_options.append(publisher[0])
+            
+            frame.publisher_options.append("None")
         except Exception as e:
             print("Error fetching publishers:", e)
             messagebox.showerror("Error", "An error occurred while fetching publishers")
@@ -123,7 +127,7 @@ class SearchBookLibriran(tk.Frame):
             book_frame.grid(row=i // 3, column=i % 3, padx=5, pady=5, sticky="nsew")
 
             # Book Name Label
-            book_name_label = tk.Label(book_frame, text="Book Name: " + book[0], font=("Helvetica", 12))
+            book_name_label = tk.Label(book_frame, text="Book Name: " + book[1], font=("Helvetica", 12))
             book_name_label.pack(anchor="w", padx=10, pady=5)
 
             # Quantity Label
@@ -131,7 +135,7 @@ class SearchBookLibriran(tk.Frame):
             quantity_label.pack(anchor="w", padx=10, pady=5)
 
             # Delete Button
-            delete_button = tk.Button(book_frame, text="Delete", command=lambda book_name=book[0]: frame.delete_book(book_name))
+            delete_button = tk.Button(book_frame, text="Delete", command=lambda book_name=book[1]: frame.delete_book(book_name))
             delete_button.pack(anchor="e", padx=10, pady=5)
 
         # Update the scroll region after adding books
