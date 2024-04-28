@@ -92,10 +92,14 @@ class SearchBookLibriran(tk.Frame):
             cursor.execute("EXEC SearchBooks @SearchTerm='', @Genre='', @Publisher='', @SortOption='None'")
             books = cursor.fetchall()
 
+            print("Books:", books)
+
+            
+
             frame.display_books(books)
 
         except Exception as e:
-            print("Error:", e)
+            print("Error2222:", e)
             messagebox.showerror("Error", "An error occurred while loading books")
 
     def search_books(frame):
@@ -131,7 +135,7 @@ class SearchBookLibriran(tk.Frame):
             book_name_label.pack(anchor="w", padx=10, pady=5)
 
             # Quantity Label
-            quantity_label = tk.Label(book_frame, text="Quantity: " + str(book[1]), font=("Helvetica", 12))
+            quantity_label = tk.Label(book_frame, text="Quantity: " + str(book[2]), font=("Helvetica", 12))
             quantity_label.pack(anchor="w", padx=10, pady=5)
 
             # Delete Button

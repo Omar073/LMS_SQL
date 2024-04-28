@@ -209,3 +209,32 @@ BEGIN
     EXEC sp_executesql @Query, N'@BookID INT', @BookID
 END
 ---------------------------------------------------------------------------------
+
+========================Functio Youssef 
+Alter PROCEDURE registeruser (
+    @password NVARCHAR(100),
+    @email NVARCHAR(100),
+    @name NVARCHAR(100),
+    @gender CHAR(1),
+    @street_name NVARCHAR(100),
+    @building_number NVARCHAR(50),
+    @city NVARCHAR(100)
+)
+AS
+BEGIN
+    BEGIN TRY
+        -- Insert data into Member table
+        INSERT INTO Member (password, email, Name, Gender, Street_name, Building_number, City)
+        VALUES (@password, @email,
+                @name, @gender, @street_name, @building_number, @city);
+
+        -- No need to set any result message since we're not using an output parameter
+    END TRY
+    BEGIN CATCH
+        -- You can handle errors here if needed
+        -- For simplicity, let's just print the error message
+        PRINT 'User registration failed. Error: ' + ERROR_MESSAGE();
+    END CATCH
+END;
+
+=============================================================

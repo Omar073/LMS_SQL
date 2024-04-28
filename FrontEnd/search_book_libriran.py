@@ -87,7 +87,7 @@ class SearchBookLibriran(tk.Frame):
     def load_all_books(frame):
         try:
             cursor = frame.db_connection.cursor()
-            cursor.execute("SELECT Title, Amount FROM Book")
+            cursor.execute("EXEC SearchBooks @SearchTerm='', @Genre='', @Publisher='', @SortOption='None'")
             books = cursor.fetchall()
 
             frame.display_books(books)
@@ -111,25 +111,12 @@ class SearchBookLibriran(tk.Frame):
 
         # Get selected publisher
         selected_publisher = frame.publisher_option.get()
-
         try:
-            # Construct SQL query based on filter and sort options
-            query = "SELECT b.Title, b.Amount FROM Book b WHERE b.Title LIKE '%" + search_term + "%'"
-            if selected_genre != "None":
-                query += " AND b.Genre_id IN (SELECT Genre_ID FROM Genre WHERE NAME LIKE '%" + selected_genre + "%')"
-            if selected_publisher != "None":
-                query += " AND b.publisher_id IN (SELECT SSN FROM Publisher WHERE NAME LIKE '%" + selected_publisher + "%')"
-
-            # Complete the query and execute it
-            if sort_option == "Ascending":
-                query += " ORDER BY b.Amount ASC"
-
-            # Execute SQL query
             cursor = frame.db_connection.cursor()
-            cursor.execute(query)
+            cursor.execute("EXEC SearchBooks @SearchTerm=?, @Genre=?, @Publisher=?, @SortOption=?", 
+                           (search_term, selected_genre, selected_publisher, sort_option))
             books = cursor.fetchall()
 
-            # Display search results
             frame.display_books(books)
 
         except Exception as e:
