@@ -129,3 +129,60 @@ RETURN
    FROM Member 
    WHERE Id = @Staff_ID AND password = @Password
 ); 
+
+
+
+
+
+----------------------------------------------------------------
+SEARCH FUNCTION Kareem
+use lms3;
+go
+CREATE PROCEDURE SearchBooks
+    @SearchTerm NVARCHAR(100),
+    @Genre NVARCHAR(100),
+    @Publisher NVARCHAR(100),
+    @SortOption NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Query NVARCHAR(MAX)
+
+    SET @Query = 'SELECT b.Title, b.Amount 
+                  FROM Book b'
+
+    IF @Genre <> '' AND @Genre IS NOT NULL
+    BEGIN
+        SET @Query = @Query + ' INNER JOIN Genre g ON b.Genre_id = g.Genre_ID'
+    END
+
+    IF @Publisher <> '' AND @Publisher IS NOT NULL
+    BEGIN
+        SET @Query = @Query + ' INNER JOIN Publisher p ON b.publisher_id = p.SSN'
+    END
+
+    SET @Query = @Query + ' WHERE b.Title LIKE ''%' + @SearchTerm + '%'''
+
+    IF @Genre <> '' AND @Genre IS NOT NULL
+    BEGIN
+        SET @Query = @Query + ' AND g.NAME LIKE ''%' + @Genre + '%'''
+    END
+
+    IF @Publisher <> '' AND @Publisher IS NOT NULL
+    BEGIN
+        SET @Query = @Query + ' AND p.NAME LIKE ''%' + @Publisher + '%'''
+    END
+
+    IF @SortOption = 'Ascending'
+    BEGIN
+        SET @Query = @Query + ' ORDER BY b.Amount ASC'
+    END
+    ELSE IF @SortOption = 'Descending'
+    BEGIN
+        SET @Query = @Query + ' ORDER BY b.Amount DESC'
+    END
+
+    EXEC sp_executesql @Query
+END
+---------------------------------------------------------------------------
