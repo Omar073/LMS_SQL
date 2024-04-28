@@ -1,15 +1,12 @@
 import tkinter as tk
 
-class UserHomePage(tk.Tk):
-    def __init__(self, master):
-        super().__init__()
-        self.title("User Homepage")
-        self.geometry("800x600")
-        self.master = master
+class UserHomePage(tk.Frame):  
+  
+    def __init__(self, parent, controller):  
+        tk.Frame.__init__(self,parent) 
+        self.controller = controller
+      
 
-        self.create_widgets()
-
-    def create_widgets(self):
         # Search Book Button
         self.search_book_button = tk.Button(self, text="Search Book", command=self.search_book)
         self.search_book_button.pack(pady=10)

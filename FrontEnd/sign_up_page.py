@@ -1,16 +1,16 @@
 import tkinter as tk
+from tkinter import messagebox
 from customtkinter import CTkLabel, CTkEntry, CTkButton
-from db_connection import get_shared_connection  
-class SignupPage(tk.Frame):
-    def __init__(self, master, show_login_page_callback):
-        super().__init__(master)
-        self.master = master
-        self.show_login_page_callback = show_login_page_callback
+from db_connection import get_shared_connection
+
+class SignUp(tk.Frame):  
+  
+    def __init__(self, parent, controller):  
+        tk.Frame.__init__(self,parent) 
+        self.controller = controller
         self.db_connection = get_shared_connection()
 
-        self.create_widgets()
 
-    def create_widgets(self):
         self.master.title("Signup")
         self.master.geometry("800x600")  # Larger screen size
 
