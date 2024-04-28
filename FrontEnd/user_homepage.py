@@ -24,6 +24,8 @@ class UserHomePage(tk.Frame):
         self.settings_button = tk.Button(self, text="Settings", command=self.settings)
         self.settings_button.pack(pady=10)
 
+        
+
         # Logout Button
         self.logout_button = tk.Button(self, text="Logout", command=self.logout)
         self.logout_button.pack(pady=10)

@@ -113,3 +113,19 @@ ALTER TABLE Attended_Event ADD FOREIGN KEY (member_id) REFERENCES Member(Id);
 ALTER TABLE Attended_Event ADD FOREIGN KEY (event_id) REFERENCES Event(Event_Id);
 ALTER TABLE Borrowing_Member ADD FOREIGN KEY (ISBN) REFERENCES Book(ISBN);
 ALTER TABLE Borrowing_Member ADD FOREIGN KEY (member_id) REFERENCES Member(Id);
+
+
+
+CREATE FUNCTION LibrarianSignInFunction (@Staff_ID INT, @Password NVARCHAR(100))
+RETURNS TABLE
+AS
+RETURN
+(
+   SELECT 'Librarian' AS Role, Staff_ID, NAME, Email_address, NULL AS Gender, NULL AS Street_name, NULL AS Building_number, NULL AS City
+   FROM Librarian 
+   WHERE Staff_ID = @Staff_ID AND password = @Password
+   UNION ALL
+   SELECT 'Member' AS Role, Id AS Staff_ID, Name, email, Gender, Street_name, Building_number, City
+   FROM Member 
+   WHERE Id = @Staff_ID AND password = @Password
+); 
