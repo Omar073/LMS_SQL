@@ -386,3 +386,5 @@ InteropTests/NativeTests/out
 **/ScratchProject/
 **/ScratchProjectWithInternals/
 FrontEnd/db_connection.py
+FrontEnd/db_connection.py
+FrontEnd/db_connection.py

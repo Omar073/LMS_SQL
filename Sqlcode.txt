@@ -129,3 +129,59 @@ RETURN
    FROM Member 
    WHERE Id = @Staff_ID AND password = @Password
 ); 
+
+
+
+
+
+CREATE PROCEDURE registeruser (
+    @password NVARCHAR(100),
+    @email NVARCHAR(100),
+    @name NVARCHAR(100),
+    @gender CHAR(1),
+    @street_name NVARCHAR(100),
+    @building_number NVARCHAR(50),
+    @city NVARCHAR(100)
+)
+AS
+BEGIN
+    BEGIN TRY
+        -- Insert data into Member table
+        INSERT INTO Member2 (password, email, Name, Gender, Street_name, Building_number, City)
+        VALUES (@password, @email,
+                @name, @gender, @street_name, @building_number, @city);
+
+        -- No need to set any result message since we're not using an output parameter
+    END TRY
+    BEGIN CATCH
+        -- You can handle errors here if needed
+        -- For simplicity, let's just print the error message
+        PRINT 'User registration failed. Error: ' + ERROR_MESSAGE();
+    END CATCH
+END;
+
+
+CREATE FUNCTION login1 (@Name NVARCHAR(100), @Password NVARCHAR(100))
+RETURNS TABLE
+AS
+RETURN
+(
+   SELECT 'Librarian' AS Role, Staff_ID, NAME, Email_address, NULL AS Gender, NULL AS Street_name, NULL AS Building_number, NULL AS City
+   FROM Librarian 
+   WHERE NAME = @Name AND password = @Password
+   UNION ALL
+   SELECT 'Member' AS Role, Id AS Staff_ID, Name, email, Gender, Street_name, Building_number, City
+   FROM Member2 
+   WHERE Name = @Name AND password = @Password
+);
+
+CREATE TABLE Member2 (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    password VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    Name VARCHAR(100) NOT NULL, 
+    Gender CHAR(1) NOT NULL,
+    Street_name VARCHAR(100),
+    Building_number VARCHAR(50),
+    City VARCHAR(100)
+);

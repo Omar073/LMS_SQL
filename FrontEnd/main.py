@@ -6,7 +6,7 @@ from user_homepage import UserHomePage
 from sign_up_page import SignUp
 from borrow import BorrowBookPage
   
-  
+
 LARGE_FONT= ("Verdana", 12)  
   
   
@@ -37,7 +37,7 @@ class SeaofBTCapp(tk.Tk):
             frame.config(width=10000, height=10000)
             frame.grid(row=0, column=0, sticky="nsew")  
   
-        self.show_frame(SignUp)  
+        self.show_frame(LoginPage)  
   
     def show_frame(self, cont):  
         frame = self.frames[cont]  
