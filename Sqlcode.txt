@@ -129,3 +129,14 @@ RETURN
    FROM Member 
    WHERE Id = @Staff_ID AND password = @Password
 ); 
+
+
+CREATE FUNCTION GetMemberInfo(@MemberId INT)
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT Id, Name, Gender, Street_name, Building_number, City, email
+    FROM Member
+    WHERE Id = @MemberId
+);
