@@ -135,7 +135,9 @@ RETURN
 
 
 ----------------------------------------------------------------
-SEARCH FUNCTION Kareem
+-------------------------- FUNCTION Kareem
+
+
 use lms3;
 go
 CREATE PROCEDURE SearchBooks
@@ -149,7 +151,7 @@ BEGIN
 
     DECLARE @Query NVARCHAR(MAX)
 
-    SET @Query = 'SELECT b.Title, b.Amount 
+    SET @Query = 'SELECT b.ISBN b.Title, b.Amount 
                   FROM Book b'
 
     IF @Genre <> '' AND @Genre IS NOT NULL
@@ -185,4 +187,5 @@ BEGIN
 
     EXEC sp_executesql @Query
 END
+
 ---------------------------------------------------------------------------
