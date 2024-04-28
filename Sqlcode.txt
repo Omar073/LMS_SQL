@@ -261,3 +261,19 @@ BEGIN
         RAISERROR ('Book is not available for borrowing.', 16, 1);
     END
 END;
+
+
+
+
+
+
+
+CREATE PROCEDURE GetUserBorrowHistory
+    @UserId INT
+AS
+BEGIN
+    SELECT Book.ISBN AS [Book ID], Book.Title, Borrowing_Member.borrow_date AS [Borrow Date], Borrowing_Member.return_date AS [Return Date]
+    FROM Borrowing_Member
+    INNER JOIN Book ON Borrowing_Member.ISBN = Book.ISBN
+    WHERE Borrowing_Member.member_id = @UserId;
+END;

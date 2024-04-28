@@ -37,6 +37,8 @@ class SearchBookLibriran(tk.Frame):
         sort_dropdown.grid(row=1, column=4, padx=20, pady=10)
 
         # Fetch and populate Genre dropdown
+        genre_label = CTkLabel(frame, text="Genre:", font=("Helvetica", 14))
+        genre_label.grid(row=1, column=5, padx=20, pady=10, sticky="e")
         frame.genre_options = []
         try:
             cursor = frame.db_connection.cursor()
@@ -56,6 +58,9 @@ class SearchBookLibriran(tk.Frame):
         genre_dropdown.grid(row=1, column=5, padx=20, pady=10)
 
         # Fetch and populate Publisher dropdown
+        publisher_label = CTkLabel(frame, text="Publisher:", font=("Helvetica", 14))
+        publisher_label.grid(row=1, column=6, padx=20, pady=10, sticky="e")
+        
         frame.publisher_options = []
         try:
             cursor = frame.db_connection.cursor()

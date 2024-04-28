@@ -75,10 +75,14 @@ class LibrarianHomePage(tk.Frame):
         print("Adding a user...")
 
     def remove_user(self):
+        from remove_user import RemoveUserPage
         self.controller.show_page(RemoveUserPage)
         print("Removing a user...")
 
     def add_event(self):
+        from add_event import AddEventPage
+        self.controller.show_page(AddEventPage)
+
         print("Adding an event...")
 
     def search_book(self):
