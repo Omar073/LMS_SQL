@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import messagebox
 from db_connection import get_shared_connection
 
-
 class AddUserPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -11,7 +10,7 @@ class AddUserPage(tk.Frame):
 
         # Labels and Entry fields for user details
         tk.Label(self, text="ID:").grid(row=0, column=0, padx=20, pady=10, sticky="e")
-        self.id_entry= tk.Entry(self)
+        self.id_entry = tk.Entry(self)
         self.id_entry.grid(row=0, column=1, padx=20, pady=10, sticky="w")
 
         tk.Label(self, text="Name:").grid(row=1, column=0, padx=20, pady=10, sticky="e")
@@ -47,9 +46,8 @@ class AddUserPage(tk.Frame):
         
         tk.Button(self, text="Home", command=self.go_to_homepage).grid(row=9, columnspan=2, padx=20, pady=20)
 
-
     def add_user(self):
-        member_id=self.id_entry.get()
+        member_id = self.id_entry.get()
         name = self.name_entry.get()
         email = self.email_entry.get()
         password = self.password_entry.get()
@@ -64,8 +62,8 @@ class AddUserPage(tk.Frame):
 
         try:
             cursor = self.db_connection.cursor()
-            cursor.execute("INSERT INTO Member (ID ,Name, email, password, Gender, Street_name, Building_number, City) VALUES (?,?, ?, ?, ?, ?, ?, ?)",
-                           (member_id,name, email, password, gender, street, building, city))
+            cursor.execute("INSERT INTO Member (ID, Name, email, password, Gender, Street_name, Building_number, City) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                           (member_id, name, email, password, gender, street, building, city))
             self.db_connection.commit()
             messagebox.showinfo("Success", "User added successfully")
             # Clear the entry fields after adding user
@@ -81,6 +79,7 @@ class AddUserPage(tk.Frame):
             messagebox.showerror("Error", str(e))
         finally:
             cursor.close()
+
     def go_to_homepage(self):
         from librarian_homepage import LibrarianHomePage
-        self.controller.show_page(LibrarianHomePage)            
+        self.controller.show_page(LibrarianHomePage)
