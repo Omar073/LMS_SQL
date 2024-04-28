@@ -3,47 +3,41 @@ import tkinter as tk
 class UserHomePage(tk.Frame):  
   
     def __init__(self, parent, controller):  
-        tk.Frame.__init__(self,parent) 
+        tk.Frame.__init__(self, parent) 
         self.controller = controller
-        self.config(width=800, height=600)
-      
+        self.config(bg="lightblue")  # Set background color
+
+        # Title label
+        title_label = tk.Label(self, text="User Home Page", font=("Helvetica", 24), bg="lightblue")
+        title_label.pack(pady=(20, 10))
 
         # Search Book Button
         from search_book_user import SearchBookUser
-        self.search_book_button = tk.Button(self, text="Search Book", command= lambda: self.controller.show_page(SearchBookUser))
-        self.search_book_button.pack(pady=10)
+        search_book_button = tk.Button(self, text="Search Book", command=lambda: self.controller.show_page(SearchBookUser), width=20)
+        search_book_button.pack(pady=10)
 
-        # Borrow Book Button
+        # Borrow History Button
         from history import HistoryPage
-        self.borrow_book_button = tk.Button(self, text="Borrow HISTORY", command= lambda: self.controller.show_page(HistoryPage))
-        self.borrow_book_button.pack(pady=10)
+        borrow_history_button = tk.Button(self, text="Borrow History", command=lambda: self.controller.show_page(HistoryPage), width=20)
+        borrow_history_button.pack(pady=10)
 
         # Attend Event Button
-        self.attend_event_button = tk.Button(self, text="Attend Event", command=self.attend_event)
-        self.attend_event_button.pack(pady=10)
+        attend_event_button = tk.Button(self, text="Attend Event", command=self.attend_event, width=20)
+        attend_event_button.pack(pady=10)
 
         # Settings Button
-        self.settings_button = tk.Button(self, text="Settings", command=self.settings)
-        self.settings_button.pack(pady=10)
+        settings_button = tk.Button(self, text="Settings", command=self.settings, width=20)
+        settings_button.pack(pady=10)
 
-
-        #Return Book Button
+        # Return Book Button
         from return_borrow_book import ReturnBorrowedBook
-        self.return_book_button = tk.Button(self, text="Return Book", command= lambda: self.controller.show_page(ReturnBorrowedBook))
-        self.return_book_button.pack(pady=10)
-
-
-        
+        return_book_button = tk.Button(self, text="Return Book", command=lambda: self.controller.show_page(ReturnBorrowedBook), width=20)
+        return_book_button.pack(pady=10)
 
         # Logout Button
         from login_page import LoginPage
-        self.logout_button = tk.Button(self, text="Logout", command= lambda: self.controller.show_frame(LoginPage))
-        self.logout_button.pack(pady=10)
-
-
-    def borrow_book(self):
-        # Implement functionality to borrow a book
-        print("Borrowing a book...")
+        logout_button = tk.Button(self, text="Logout",  width=20, command=lambda: self.controller.show_page(LoginPage))
+        logout_button.pack(pady=10)
 
     def attend_event(self):
         # Implement functionality to attend an event
@@ -53,19 +47,6 @@ class UserHomePage(tk.Frame):
         # Implement functionality to access user settings
         print("Accessing settings...")
 
-
     def logout(self):
         # Implement functionality to logout
-        root = self.winfo_toplevel()
-        root.destroy()
-        from login_page import LoginPage
-        login_page = LoginPage(root)
-        root.mainloop()
-
-# def main():
-#     root = tk.Tk()
-#     user_homepage = UserHomePage()
-#     root.mainloop()
-
-# if __name__ == "__main__":
-#     main()
+        self.controller.show_frame(LoginPage)

@@ -6,12 +6,16 @@ from remove_user import RemoveUserPage
 class LibrarianHomePage(tk.Frame):  
 
     def __init__(self, parent, controller):  
-        tk.Frame.__init__(self, parent, width=800, height=600) 
+        tk.Frame.__init__(self, parent) 
         self.controller = controller
-        self.config(width=800, height=600)
+        self.config(bg="lightblue")  # Set background color
+
+        # Title label
+        title_label = tk.Label(self, text="Librarian Home Page", font=("Helvetica", 24), bg="lightblue")
+        title_label.pack(pady=(20, 10))
 
         # Create a canvas and scrollable frame
-        canvas = tk.Canvas(self, width=800, height=600)
+        canvas = tk.Canvas(self)
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar = ttk.Scrollbar(self, orient="vertical", command=canvas.yview)
         scrollbar.pack(side="right", fill="y")
@@ -22,34 +26,34 @@ class LibrarianHomePage(tk.Frame):
 
         # Add Book Card
         add_book_card = self.create_card(scrollable_frame, "Add Book", self.add_book)
-        add_book_card.grid(row=0, column=0, padx=10, pady=10)
+        add_book_card.pack(padx=10, pady=10, fill='x')
 
         # Remove Book Card
         remove_book_card = self.create_card(scrollable_frame, "Remove Book", self.remove_book)
-        remove_book_card.grid(row=0, column=1, padx=10, pady=10)
+        remove_book_card.pack(padx=10, pady=10, fill='x')
 
         # Add User Card
         add_user_card = self.create_card(scrollable_frame, "Add User", self.add_user)
-        add_user_card.grid(row=1, column=0, padx=10, pady=10)
+        add_user_card.pack(padx=10, pady=10, fill='x')
 
         # Remove User Card
         remove_user_card = self.create_card(scrollable_frame, "Remove User", self.remove_user)
-        remove_user_card.grid(row=1, column=1, padx=10, pady=10)
+        remove_user_card.pack(padx=10, pady=10, fill='x')
 
         # Add Event Card
         add_event_card = self.create_card(scrollable_frame, "Add Event", self.add_event)
-        add_event_card.grid(row=2, column=0, padx=10, pady=10)
+        add_event_card.pack(padx=10, pady=10, fill='x')
 
         # Search Book Card
         search_book_card = self.create_card(scrollable_frame, "Search Book", self.search_book)
-        search_book_card.grid(row=2, column=1, padx=10, pady=10)
+        search_book_card.pack(padx=10, pady=10, fill='x')
 
         # Logout Card
         logout_card = self.create_card(scrollable_frame, "Logout", self.logout)
-        logout_card.grid(row=3, columnspan=2, padx=10, pady=10)
+        logout_card.pack(padx=10, pady=10, fill='x')
 
     def create_card(self, parent, title, command):
-        card = ttk.Button(parent, text=title, command=command, style="Card.TButton" , width=30)
+        card = tk.Button(parent, text=title, command=command, font=("Helvetica", 14), bg="#f0f0f0", relief="groove", width=30)
         return card
 
     def add_book(self):
@@ -76,6 +80,3 @@ class LibrarianHomePage(tk.Frame):
     def logout(self):
         from login_page import LoginPage
         self.controller.show_page(LoginPage)
-
-
-
