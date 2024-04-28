@@ -68,6 +68,8 @@ class LoginPage(tk.Frame):
                     from user_homepage import UserHomePage
                     
                     LoogedInUserID = rows[0][1]
+
+                    print("Logged in user ID login page:", LoogedInUserID)
                     self.controller.show_page(UserHomePage)
                 else:
                     print("Login failed. Invalid username or password")

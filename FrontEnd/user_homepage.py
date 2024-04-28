@@ -25,6 +25,13 @@ class UserHomePage(tk.Frame):
         self.settings_button = tk.Button(self, text="Settings", command=self.settings)
         self.settings_button.pack(pady=10)
 
+
+        #Return Book Button
+        from return_borrow_book import ReturnBorrowedBook
+        self.return_book_button = tk.Button(self, text="Return Book", command= lambda: self.controller.show_page(ReturnBorrowedBook))
+        self.return_book_button.pack(pady=10)
+
+
         
 
         # Logout Button
