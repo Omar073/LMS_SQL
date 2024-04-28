@@ -31,7 +31,7 @@ class RemoveUserPage(tk.Frame):
     def populate_user_ids(self, *args):
         try:
             cursor = self.db_connection.cursor()
-            cursor.execute("SELECT ID FROM Member")
+            cursor.execute("SELECT ID FROM Member2")
             user_ids = cursor.fetchall()
             user_id_list = [str(user[0]) for user in user_ids]
             self.user_id_dropdown['menu'].delete(0, 'end')
@@ -53,13 +53,13 @@ class RemoveUserPage(tk.Frame):
         try:
             cursor = self.db_connection.cursor()
             # Check if the user ID exists in the Member table
-            cursor.execute("SELECT ID FROM Member WHERE ID=?", (user_id,))
+            cursor.execute("SELECT ID FROM Member2 WHERE ID=?", (user_id,))
             if not cursor.fetchone():
                 messagebox.showerror("Error", "User ID not found in the Member table")
                 return
             
             # If the user ID exists, proceed to delete
-            cursor.execute("DELETE FROM Member WHERE ID=?", (user_id,))
+            cursor.execute("DELETE FROM Member2 WHERE ID=?", (user_id,))
             self.db_connection.commit()
             messagebox.showinfo("Success", "User removed successfully")
             # Repopulate dropdown after removing user
