@@ -33,8 +33,8 @@ class LoginPage(tk.Frame):
         login_button.grid(row=2, columnspan=2, padx=20, pady=20)
 
         # Signup Button
-        from sign_up_page import SignUp as Sig
-        signup_button = tk.Button(self, text="Signup", font=("Helvetica", 14), command=lambda: controller.show_page(Sig))
+        from sign_up_page import SignUp 
+        signup_button = tk.Button(self, text="Signup", font=("Helvetica", 14), command=lambda: controller.show_page(SignUp))
         signup_button.grid(row=3, columnspan=2, padx=20, pady=10)
 
     def login(self):
