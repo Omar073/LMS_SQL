@@ -1,5 +1,6 @@
 import tkinter as tk 
 from tkinter import ttk
+from settings_page import SettingsPage
 from login_page import LoginPage
 from librarian_homepage import LibrarianHomePage
 from user_homepage import UserHomePage
@@ -31,7 +32,7 @@ class SeaofBTCapp(tk.Tk):
         
         self.frames = {}  
   
-        for F in (LoginPage, LibrarianHomePage, UserHomePage , SignUp ):  
+        for F in (LoginPage, LibrarianHomePage, UserHomePage , SignUp, SettingsPage):
             frame = F(container, self)  
             self.frames[F] = frame  
             frame.config(width=10000, height=10000)
