@@ -277,3 +277,64 @@ BEGIN
     INNER JOIN Book ON Borrowing_Member.ISBN = Book.ISBN
     WHERE Borrowing_Member.member_id = @UserId;
 END;
+
+
+CREATE PROCEDURE add_user_procedure
+    @name NVARCHAR(100),
+    @email NVARCHAR(100),
+    @password NVARCHAR(100),
+    @gender CHAR(1),
+    @street NVARCHAR(100),
+    @building NVARCHAR(50),
+    @city NVARCHAR(100),
+    @phone_number NVARCHAR(15)
+AS
+BEGIN
+    BEGIN TRY
+        -- Insert data into Member table
+        INSERT INTO Member (Name, email, password, Gender, Street_name, Building_number, City)
+        VALUES (@name, @email, @password, @gender, @street, @building, @city);
+
+        -- Insert phone number into Member_phone table
+        INSERT INTO Member_phone (phone_number, member_id)
+        VALUES (@phone_number, SCOPE_IDENTITY());
+
+        -- No need to set any result message since we're not using an output parameter
+    END TRY
+    BEGIN CATCH
+        -- You can handle errors here if needed
+        -- For simplicity, let's just print the error message
+        PRINT 'User registration failed. Error: ' + ERROR_MESSAGE();
+    END CATCH
+END;
+---------------------------------------------------
+
+
+CREATE PROCEDURE RemoveMemberByID
+    @member_id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        -- Check if the member exists
+        IF NOT EXISTS (SELECT 1 FROM Member WHERE Id = @member_id)
+        BEGIN
+            -- Member with the provided ID does not exist
+            RAISERROR('Member not found with the provided ID', 16, 1);
+            RETURN;
+        END
+
+        -- Delete the member's phone number from Member_phone table
+        DELETE FROM Member_phone WHERE member_id = @member_id;
+
+        -- Delete the member from the Member table
+        DELETE FROM Member WHERE Id = @member_id;
+
+        PRINT 'User removed successfully';
+    END TRY
+    BEGIN CATCH
+        -- Print the error message
+        PRINT ERROR_MESSAGE();
+    END CATCH
+END;
