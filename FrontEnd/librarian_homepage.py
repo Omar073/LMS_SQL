@@ -28,9 +28,8 @@ class LibrarianHomePage(tk.Frame):
         add_book_card = self.create_card(scrollable_frame, "Add Book", self.add_book)
         add_book_card.pack(padx=10, pady=10, fill='x')
 
-        # Remove Book Card
-        remove_book_card = self.create_card(scrollable_frame, "Remove Book", self.remove_book)
-        remove_book_card.pack(padx=10, pady=10, fill='x')
+        add_author_card = self.create_card(scrollable_frame, "Add Author", self.add_author)
+        add_author_card.pack(padx=10, pady=10, fill='x')
 
         # Add User Card
         add_user_card = self.create_card(scrollable_frame, "Add User", self.add_user)
@@ -44,6 +43,9 @@ class LibrarianHomePage(tk.Frame):
         remove_user_card = self.create_card(scrollable_frame, "Remove User", self.remove_user)
         remove_user_card.pack(padx=10, pady=10, fill='x')
 
+        # Add publisher 
+        add_publisher_card = self.create_card(scrollable_frame, "Add Publisher", self.add_publisher)
+        add_publisher_card.pack(padx=10, pady=10, fill='x')
         # Add Event Card
         add_event_card = self.create_card(scrollable_frame, "Add Event", self.add_event)
         add_event_card.pack(padx=10, pady=10, fill='x')
@@ -64,8 +66,9 @@ class LibrarianHomePage(tk.Frame):
         from add_book import AddBook
         self.controller.show_page(AddBook)
 
-    def remove_book(self):
-        print("Removing a book...")
+    def add_author(self):
+        from add_author import AddAuthor
+        self.controller.show_page(AddAuthor)
 
     def add_user(self):
         self.controller.show_page(AddUserPage)
@@ -89,3 +92,6 @@ class LibrarianHomePage(tk.Frame):
     def add_genre(self):
         from add_genre import AddGenre
         self.controller.show_page(AddGenre)
+    def add_publisher(self):
+        from add_publisher import AddPublisher
+        self.controller.show_page(AddPublisher)
