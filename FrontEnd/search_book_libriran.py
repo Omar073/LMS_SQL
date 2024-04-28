@@ -11,7 +11,7 @@ class SearchBookLibriran(tk.Frame):
 
         from librarian_homepage import LibrarianHomePage
         back_button = CTkButton(frame, text="Back", command=lambda: controller.show_page(LibrarianHomePage))
-        back_button.grid(row=1, column=0, padx=20, pady=10, columnspan=4)
+        back_button.grid(row=0, column=0, columnspan=4)
 
         # Search Label and Entry
         search_label = CTkLabel(frame, text="Search Book:", font=("Helvetica", 14))

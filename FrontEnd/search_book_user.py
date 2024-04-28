@@ -5,15 +5,15 @@ from tkinter import messagebox
 from customtkinter import CTkLabel, CTkEntry, CTkButton
 from db_connection import get_shared_connection
 
-class SearchBookLibriran(tk.Frame):
+class SearchBookUser(tk.Frame):
     def __init__(frame, parent, controller):
         tk.Frame.__init__(frame, parent)
         frame.controller = controller
         frame.db_connection = get_shared_connection()
 
-        from librarian_homepage import LibrarianHomePage
-        back_button = CTkButton(frame, text="Back", command=lambda: controller.show_page(LibrarianHomePage))
-        back_button.grid(row=0, column=0, padx=20, pady=10, columnspan=4)
+        from user_homepage import UserHomePage
+        back_button = CTkButton(frame, text="Back", command=lambda: controller.show_page(UserHomePage))
+        back_button.grid(row=0, column=0, columnspan=4)
 
         # Search Label and Entry
         search_label = CTkLabel(frame, text="Search Book:", font=("Helvetica", 14))
@@ -127,6 +127,7 @@ class SearchBookLibriran(tk.Frame):
     def display_books(frame, books):
         # Display books in a grid shape
         for i, book in enumerate(books):
+            print("Book:", book[0])
             book_frame = tk.Frame(frame.scrollable_frame_inner, relief=tk.RIDGE, borderwidth=2)
             book_frame.grid(row=i // 3, column=i % 3, padx=5, pady=5, sticky="nsew")
 

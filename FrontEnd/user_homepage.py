@@ -9,7 +9,8 @@ class UserHomePage(tk.Frame):
       
 
         # Search Book Button
-        self.search_book_button = tk.Button(self, text="Search Book", command=self.search_book)
+        from search_book_user import SearchBookUser
+        self.search_book_button = tk.Button(self, text="Search Book", command= lambda: self.controller.show_page(SearchBookUser))
         self.search_book_button.pack(pady=10)
 
         # Borrow Book Button
@@ -31,9 +32,6 @@ class UserHomePage(tk.Frame):
         self.logout_button = tk.Button(self, text="Logout", command= lambda: self.controller.show_frame(LoginPage))
         self.logout_button.pack(pady=10)
 
-    def search_book(self):
-        # Implement functionality to search for a book
-        print("Searching for a book...")
 
     def borrow_book(self):
         # Implement functionality to borrow a book
