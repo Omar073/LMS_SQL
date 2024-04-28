@@ -2,8 +2,10 @@ from dbutils.pooled_db import PooledDB
 import pyodbc
 
 # Database connection parameters
+
 server = 'TheBlackBone'
 database = 'lms3'
+
 driver = 'SQL SERVER'
 trusted_connection = 'yes'
 conn_str = f"DRIVER={driver};SERVER={server};DATABASE={database};TRUSTED_CONNECTION={trusted_connection}"

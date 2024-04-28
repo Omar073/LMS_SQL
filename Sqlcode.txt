@@ -52,14 +52,14 @@ CREATE TABLE Event (
 );
 
 CREATE TABLE Member (
-  Id INT PRIMARY KEY,
-  password VARCHAR(100) NOT NULL,
-  email VARCHAR(100) NOT NULL,
-  Name VARCHAR(100) NOT NULL, 
-  Gender CHAR(1) NOT NULL,
-  Street_name VARCHAR(100),
-  Building_number VARCHAR(50),
-  City VARCHAR(100)
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    password VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    Name VARCHAR(100) NOT NULL, 
+    Gender CHAR(1) NOT NULL,
+    Street_name VARCHAR(100),
+    Building_number VARCHAR(50),
+    City VARCHAR(100)
 );
 
 CREATE TABLE Member_phone (
@@ -131,12 +131,131 @@ RETURN
 ); 
 
 
-CREATE FUNCTION GetMemberInfo(@MemberId INT)
-RETURNS TABLE
+
+----------------------------------------------------------------
+-------------------------- FUNCTION Kareem
+
+
+use lms3;
+go
+CREATE PROCEDURE SearchBooks
+    @SearchTerm NVARCHAR(100),
+    @Genre NVARCHAR(100),
+    @Publisher NVARCHAR(100),
+    @SortOption NVARCHAR(50)
 AS
-RETURN
-(
-    SELECT Id, Name, Gender, Street_name, Building_number, City, email
-    FROM Member
-    WHERE Id = @MemberId
-);
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Query NVARCHAR(MAX)
+
+    SET @Query = 'SELECT b.ISBN, b.Title, b.Amount 
+                  FROM Book b'
+
+    IF @Genre <> '' AND @Genre IS NOT NULL AND @Genre <> 'None'
+    BEGIN
+        SET @Query = @Query + ' INNER JOIN Genre g ON b.Genre_id = g.Genre_ID'
+    END
+
+    IF @Publisher <> '' AND @Publisher IS NOT NULL AND @Publisher <> 'None'
+    BEGIN
+        SET @Query = @Query + ' INNER JOIN Publisher p ON b.publisher_id = p.SSN'
+    END
+
+    SET @Query = @Query + ' WHERE 1 = 1' -- Placeholder condition to append additional conditions
+
+    IF @SearchTerm <> '' AND @SearchTerm IS NOT NULL
+    BEGIN
+        SET @Query = @Query + ' AND b.Title LIKE ''%' + @SearchTerm + '%'''
+    END
+
+    IF @Genre <> '' AND @Genre IS NOT NULL AND @Genre <> 'None'
+    BEGIN
+        SET @Query = @Query + ' AND g.NAME LIKE ''%' + @Genre + '%'''
+    END
+
+    IF @Publisher <> '' AND @Publisher IS NOT NULL AND @Publisher <> 'None'
+    BEGIN
+        SET @Query = @Query + ' AND p.NAME LIKE ''%' + @Publisher + '%'''
+    END
+
+    IF @SortOption = 'Ascending'
+    BEGIN
+        SET @Query = @Query + ' ORDER BY b.Amount ASC'
+    END
+    ELSE IF @SortOption = 'Descending'
+    BEGIN
+        SET @Query = @Query + ' ORDER BY b.Amount DESC'
+    END
+
+    EXEC sp_executesql @Query
+END
+
+---------------------------------------------------------------------------
+CREATE PROCEDURE DeleteBook
+    @BookID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Query NVARCHAR(MAX)
+
+    -- Build the SQL query to delete the book with the specified ISBN
+    SET @Query = 'DELETE FROM Book WHERE ISBN = @BookID'
+
+    -- Execute the SQL query
+    EXEC sp_executesql @Query, N'@BookID INT', @BookID
+END
+---------------------------------------------------------------------------------
+
+========================Functio Youssef 
+Alter PROCEDURE registeruser (
+    @password NVARCHAR(100),
+    @email NVARCHAR(100),
+    @name NVARCHAR(100),
+    @gender CHAR(1),
+    @street_name NVARCHAR(100),
+    @building_number NVARCHAR(50),
+    @city NVARCHAR(100)
+)
+AS
+BEGIN
+    BEGIN TRY
+        -- Insert data into Member table
+        INSERT INTO Member (password, email, Name, Gender, Street_name, Building_number, City)
+        VALUES (@password, @email,
+                @name, @gender, @street_name, @building_number, @city);
+
+        -- No need to set any result message since we're not using an output parameter
+    END TRY
+    BEGIN CATCH
+        -- You can handle errors here if needed
+        -- For simplicity, let's just print the error message
+        PRINT 'User registration failed. Error: ' + ERROR_MESSAGE();
+    END CATCH
+END;
+
+=============================================================
+CREATE PROCEDURE Borrow_Book
+    @ISBN INT,
+    @member_id INT,
+    @return_date DATE = NULL
+AS
+BEGIN
+    -- Check if the book is available for borrowing
+    IF EXISTS (SELECT 1 FROM Book WHERE ISBN = @ISBN AND amount > 0)
+    BEGIN
+        -- Decrement the quantity of the book
+        UPDATE Book SET amount = amount - 1 WHERE ISBN = @ISBN;
+
+        -- Insert the borrowing record
+        INSERT INTO Borrowing_Member (ISBN, member_id, return_date, borrow_date)
+        VALUES (@ISBN, @member_id, @return_date, GETDATE());
+
+        PRINT 'Book borrowed successfully.';
+    END
+    ELSE
+    BEGIN
+        RAISERROR ('Book is not available for borrowing.', 16, 1);
+    END
+END;
