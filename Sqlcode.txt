@@ -202,12 +202,32 @@ BEGIN
 
     DECLARE @Query NVARCHAR(MAX)
 
-    -- Build the SQL query to delete the book with the specified ISBN
-    SET @Query = 'DELETE FROM Book WHERE ISBN = @BookID'
+    -- Disable foreign key constraints temporarily
+    EXEC sp_MSforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL';
+
+    -- Build the SQL query to delete the book with the specified ISBN and related records
+    SET @Query = '
+        BEGIN TRANSACTION;
+
+        -- Delete borrowing history related to the book
+        DELETE FROM Borrowing_Member WHERE ISBN = @BookID;
+
+        -- Delete the book authors'' relationships related to the book
+        DELETE FROM Authors_Book WHERE ISBN = @BookID;
+
+        -- Delete the book
+        DELETE FROM Book WHERE ISBN = @BookID;
+
+        COMMIT TRANSACTION;
+    '
 
     -- Execute the SQL query
     EXEC sp_executesql @Query, N'@BookID INT', @BookID
+
+    -- Re-enable foreign key constraints
+    EXEC sp_MSforeachtable 'ALTER TABLE ? CHECK CONSTRAINT ALL';
 END
+
 ---------------------------------------------------------------------------------
 
 ========================Functio Youssef 
