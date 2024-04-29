@@ -24,13 +24,8 @@ class UserHomePage(tk.Frame):
         borrow_history_button = tk.Button(self, text="Borrow History", command=lambda: self.controller.show_page(HistoryPage), width=20)
         borrow_history_button.pack(pady=10)
 
-        # Attend Event Button
-        attend_event_button = tk.Button(self, text="Attend Event", command=self.attend_event, width=20)
-        attend_event_button.pack(pady=10)
 
-        # Settings Button
-        settings_button = tk.Button(self, text="Settings", command=self.settings, width=20)
-        settings_button.pack(pady=10)
+
 
         # Return Book Button
         from return_borrow_book import ReturnBorrowedBook
